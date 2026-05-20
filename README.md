@@ -1,2 +1,26 @@
 # ETL_workshop3
 This repository contains the workshop3 development by Valentina Morales.
+--
+En primera instancia se realizo el EDA para cada uno de los dataset proporcionados, evaluando desde la estructura del dataset hasta los problemas dentro de él, para los años de 2015 a 2019. Mediante esto se pudo analisar observar que:
+
+- En el año 2015 no se pueden reconocer valores faltantes, duplicados, nombres de los paises o regiones escritos de diferente forma, solo algunos parecidos pero que representan diferentes paises, no se encuentran valores atipicos solo algunos nulos que pueden significar ausencia no error porque estas columnas representan contribuciones al puntaje de felicidad. Un valor de 0 puede significar que ese indicador no aportó al score en ese registro no que es atipico.
+- En el año 2016 no se pueden reconocer valores faltantes, duplicados, nombres de los paises o regiones escritos de diferente forma, solo algunos parecidos pero que representan diferentes paises, no se encuentran valores atipicos solo algunos nulos que pueden significar ausencia no error porque estas columnas representan contribuciones al puntaje de felicidad. Un valor de 0 puede significar que ese indicador no aportó al score en ese registro no que es atipico.
+- En el año 2017 no se pueden reconocer valores faltantes, duplicados, nombres de los paises escritos de diferente forma, solo algunos parecidos pero que representan diferentes paises, no se encuentran valores atipicos solo algunos nulos que pueden significar ausencia no error porque estas columnas representan contribuciones al puntaje de felicidad. Un valor de 0 puede significar que ese indicador no aportó al score en ese registro no que es atipico.
+- En el año 2018, se reconoce un unico valor faltante en "Perceptions of corruption", pero no se ven duplicados. Ademas se puede identificar que en la columna de "paises o regiones" solo se identifican despues de hacer la comparacion con las regiones de los previos años, solo se identifican paises, pero ninguno de esos nombres de los paises esta escritos de diferente forma, solo algunos parecidos pero que representan diferentes paises, no se encuentran valores atipicos solo algunos nulos que pueden significar ausencia no error porque estas columnas representan contribuciones al puntaje de felicidad. Un valor de 0 puede significar que ese indicador no aportó al score en ese registro no que es atipico.
+- En el año 2019 no se reconocen valores faltantes ni duplicados. Ademas se puede identificar que en la columna de "paises o regiones" solo se identifican despues de hacer la comparacion con las regiones de los previos años, solo se identifican paises, pero ninguno de esos nombres de los paises esta escritos de diferente forma, solo algunos parecidos pero que representan diferentes paises, no se encuentran valores atipicos solo algunos nulos que pueden significar ausencia no error porque estas columnas representan contribuciones al puntaje de felicidad. Un valor de 0 puede significar que ese indicador no aportó al score en ese registro no que es atipico.
+- Entre los diferentes años se pueden observar que las columas de los años 2015 y 2016 son muy similares con esepcion de "Standard Error" en 2015 y "Lower Confidence Interval" y "Upper Confidence Interval" en 2016; En 2017 las columnas son similares pero los nombres en su mayoria no presentan coincidencia en la escritura con los años previos y en los años 2018 y 2019 las columnas son iguales tanto en escritura como en la cantidad de columnas asi que son las unicas que presentan igualdad.
+
+--
+
+Debido a que se debia de generar una unificacion de todos los datasets se debian de reconocer las columnas claves para esta, ademas de como poder unificarlas por ende se identificaron diferentes columnas mediantes sus similitudes asi, proporcionando los primeros pasos para el esquema de unificacion.
+
+1. creacion de la columna año para identificar los diferentes años.
+2. columna Country debido a que todas la poseen solo se debera de cambiar el nombre a aquellas que no lo tienen asi.
+3. En la parte del rank todos poseen esa columna solo que con diferentes nombres: "Happiness Rank", "Happiness.Rank" y "Overall rank".
+4. En la parte del score todos poseen esa columna solo que con diferentes nombres: "Happiness Score", "Happiness.Score" y "Score".
+5. En la parte del GDP todos poseen esa columna solo que con diferentes nombres: "Economy (GDP per Capita)", "Economy..GDP.per.Capita." y "GDP per capita".
+6. En la parte del soporte economico todos poseen esa columna solo que con diferentes nombres: "Family" y "Social support".
+7. En la parte de esperanza de vida todos poseen esa columna solo que con diferentes nombres: "Health (Life Expectancy)", "Health..Life.Expectancy." y "Healthy life expectancy".
+8. En la parte de Freedom todos poseen esa columna solo que con diferentes nombres: "Freedom" y "Freedom to make life choices".
+9. En la parte de percepcion de la corrupcion todos poseen esa columna solo que con diferentes nombres: "Trust (Government Corruption)", "Trust..Government.Corruption." y "Perceptions of corruption".
+10. En la parte de Generosity todos poseen el mismo nombre por ende no hay que realizar cambios.
