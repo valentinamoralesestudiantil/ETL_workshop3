@@ -145,6 +145,8 @@ The exploratory analysis showed that the main challenge was not the presence of 
 
 ### Feature Selection and Data Preparation for the Machine Learning Model
 
+Before starting this process, the auxiliary files `cleaning.py` were created, which will perform the entire cleaning and normalization process mentioned, and `union.py`, which will perform the union of all the datasets.
+
 For the machine learning model, the target variable was defined as:
 
 - `happiness_score`
@@ -263,16 +265,18 @@ After storing the raw event, the consumer validates the JSON event schema by che
 
 For this process, a MySQL database called happiness_dw was created. This database works as the project data warehouse and contains several tables, each one with a specific purpose.
 
-The raw_happiness_events table stores the original event received from Kafka, along with its processing status and possible error messages.
+- The raw_happiness_events table stores the original event received from Kafka, along with its processing status and possible error messages.
 
-The dim_country table stores the unique countries.
+- The dim_country table stores the unique countries.
 
-The dim_date table stores the years present in the data.
+- The dim_date table stores the years present in the data.
 
-The dim_raw_event table stores additional information about the raw event, such as processing status, ingestion time, event source, and Kafka topic name.
+- The dim_raw_event table stores additional information about the raw event, such as processing status, ingestion time, event source, and Kafka topic name.
 
-The fact_predictions table works as the fact table and stores the prediction results, including the actual score, predicted score, prediction error, event timestamp, and prediction timestamp.
+- The fact_predictions table works as the fact table and stores the prediction results, including the actual score, predicted score, prediction error, event timestamp, and prediction timestamp.
 
 Each prediction is linked to the original event using raw_event_id, which allows every result to be traced back to the exact Kafka message that generated it.
 
 The following diagram represents the data warehouse schema used in the project:
+
+Para su ejecucion es importante tener en cuenta que primero se debe de ejecutar los archivos auxiliares `validation.py`, `model_utils.py`, `database.py`, `create_table.py`, `config.py` despues de eso se puede ejecutar el consumer con `python consumer.py` dentro de la carpeta kafka y por ultimo `python producer.py` en la carpeta kafka, hay que esperar hasta que el producer mande toda la informacion y el consumer simpre va a segir escuchando por si entra alguna informacion nueva.
