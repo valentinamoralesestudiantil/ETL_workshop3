@@ -234,4 +234,45 @@ Finally, the trained model and the feature list were serialized and saved for la
 - `models/model.pkl`
 - `models/features.pkl`
 
-Overall, the model showed acceptable performance for the objective of the workshop. The selected features provide enough information to generate reasonable predictions, and the serialized model can be integrated into the Kafka consumer to perform real-time inference.
+Overall, the model showed acceptable performance for the workshop's objective, and the serialized model can be integrated into the Kafka consumer to perform real-time inferences.
+
+---
+
+
+## Kafka Streaming Pipeline
+
+After completing the first part of the project, Part B was developed, which corresponds to the **Streaming ETL with Apache Kafka** process.
+
+To start this stage, the **Kafka** and **Zookeeper** containers were created and started using Docker Compose with the following command:
+
+`docker compose up -d`
+
+---
+
+This enabled communication between the Kafka producer and consumer.
+
+In this process, the producer reads the raw .csv files from 2015 to 2019. Unlike the first part of the project, this stage does not use a previously merged dataset. Instead, the producer reads each file and streams the records one by one as JSON events to the Kafka topic happiness-predictions.
+
+Although the data comes from raw files, the producer standardizes the column names before sending each event, using the same schema defined during the data cleaning stage. This allows the consumer to receive and process the events consistently.
+
+The consumer performs a more extensive process because it is responsible for several tasks within the pipeline. To improve code organization, some functions were separated into auxiliary files and then imported into consumer.py.
+
+The consumer receives events in real time from Kafka and, as the first step, stores the original message in the raw_happiness_events table before applying any validation or prediction. This ensures traceability of the received data.
+
+After storing the raw event, the consumer validates the JSON event schema by checking for missing fields, invalid data types, and invalid numerical values. Then, it ensures that the predictor variables follow the same order used during model training, loads the serialized model from model.pkl, generates the happiness_score prediction, and stores the results in the database.
+
+For this process, a MySQL database called happiness_dw was created. This database works as the project data warehouse and contains several tables, each one with a specific purpose.
+
+The raw_happiness_events table stores the original event received from Kafka, along with its processing status and possible error messages.
+
+The dim_country table stores the unique countries.
+
+The dim_date table stores the years present in the data.
+
+The dim_raw_event table stores additional information about the raw event, such as processing status, ingestion time, event source, and Kafka topic name.
+
+The fact_predictions table works as the fact table and stores the prediction results, including the actual score, predicted score, prediction error, event timestamp, and prediction timestamp.
+
+Each prediction is linked to the original event using raw_event_id, which allows every result to be traced back to the exact Kafka message that generated it.
+
+The following diagram represents the data warehouse schema used in the project:
