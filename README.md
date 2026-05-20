@@ -138,3 +138,100 @@ The missing value found in the 2018 `Perceptions of corruption` column was handl
 ## 5. Initial Conclusion
 
 The exploratory analysis showed that the main challenge was not the presence of duplicated records or severe missing values, but the inconsistency in column names and schema structure across the datasets. Therefore, schema harmonization was required before integrating the data and preparing it for machine learning.
+
+---
+
+## Feature Engineering
+
+### Feature Selection and Data Preparation for the Machine Learning Model
+
+For the machine learning model, the target variable was defined as:
+
+- `happiness_score`
+
+Initially, the following numerical variables were analyzed as possible predictors:
+
+- `year`
+- `gdp`
+- `health`
+- `social_support`
+- `freedom`
+- `corruption`
+- `generosity`
+
+However, after analyzing the correlation results and the behavior of the variables, the final selected features were:
+
+- `gdp`
+- `health`
+- `social_support`
+- `freedom`
+- `corruption`
+- `generosity`
+
+The variable `happiness_rank` was excluded to avoid target leakage. This variable directly represents the ranking position of each country according to the happiness score, so including it would give the model information that is too closely related to the target variable.
+
+The variable `year` was analyzed but was not included in the final model because its correlation with `happiness_score` was almost zero. Therefore, it did not provide relevant predictive information for the model.
+
+### Correlation Analysis
+
+The correlation analysis showed that the variables most strongly related to `happiness_score` were:
+
+- `gdp`
+- `health`
+- `social_support`
+- `freedom`
+- `corruption`
+
+The variables with the lowest correlation were:
+
+- `generosity`
+- `year`
+
+The correlation matrix confirmed these results. Variables with stronger relationships to `happiness_score` showed higher correlation values, while variables such as `year` and `generosity` showed weaker relationships. The matrix also allowed the identification of relationships between the predictor variables themselves.
+
+### Graphical Analysis
+
+Several visual analyses were performed to understand the relationship between each feature and the target variable.
+
+1. A positive relationship was observed between `gdp` and `happiness_score`. This indicates that countries with higher economic contribution tend to have higher happiness scores.
+
+2. A positive relationship was observed between `health` and `happiness_score`. This suggests that countries with higher healthy life expectancy tend to report higher happiness scores.
+
+3. A positive relationship was observed between `social_support` and `happiness_score`. Countries with stronger social support tend to have higher happiness scores.
+
+4. A moderate positive relationship was observed between `freedom` and `happiness_score`. Although the data points show some dispersion, countries with higher freedom values tend to report higher happiness scores.
+
+5. The variable `corruption` represents an indicator related to corruption perception or institutional trust. In this dataset, higher values are interpreted as a better institutional perception, not as higher corruption. A weak to moderate positive relationship was observed between `corruption` and `happiness_score`. Although the data points are highly dispersed, especially at lower values, the correlation shows that this variable still contributes useful information to the model.
+
+6. A low to moderate positive relationship was observed between `generosity` and `happiness_score`. The data points show dispersion, and many high happiness scores are associated with relatively low generosity values. However, the relationship is not completely null, so the variable was kept in the model.
+
+7. The variable `year` did not show a relevant relationship with `happiness_score`. Since its correlation was almost zero, it was discarded from the final model.
+
+## Train Regression Model
+
+### Model Training, Evaluation and Serialization
+
+A Linear Regression model was used for training because it is a simple and interpretable model, suitable for predicting a continuous numerical variable such as `happiness_score`.
+
+A `StandardScaler` was included inside a pipeline to standardize the predictor variables before training the model. This ensures that all numerical features are on a comparable scale.
+
+The dataset was split into training and testing sets using a 70/30 split. The model was then trained and evaluated using the following metrics:
+
+| Metric | Result |
+|---|---:|
+| MAE | 0.4321 |
+| RMSE | 0.5566 |
+| R² | 0.7519 |
+
+The Mean Absolute Error (MAE) was 0.4321, which means that, on average, the model prediction differs from the real happiness score by approximately 0.43 points.
+
+The Root Mean Squared Error (RMSE) was 0.5566, which indicates that the model has a relatively low prediction error.
+
+The R² value was 0.7519, meaning that the model explains approximately 75.19% of the variability in the happiness score. This result is acceptable for the purpose of this workshop, since the main objective is to integrate a complete ETL, Kafka, machine learning, database, and dashboard pipeline rather than optimizing the model performance.
+
+Finally, the trained model and the feature list were serialized and saved for later use in the streaming pipeline:
+
+- `models/model.pkl`
+- `models/features.pkl`
+
+Overall, the model showed acceptable performance for the objective of the workshop. The selected features provide enough information to generate reasonable predictions, and the serialized model can be integrated into the Kafka consumer to perform real-time inference.
