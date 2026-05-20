@@ -4,6 +4,12 @@ This repository contains the development of Workshop 3 for the ETL course, creat
 
 The objective of this project is to build an integrated ETL and streaming pipeline using historical World Happiness datasets from 2015 to 2019. The project includes data profiling, data cleaning, schema harmonization, feature engineering, machine learning model training, Kafka-based streaming inference, prediction storage in a MySQL data warehouse, and a Power BI dashboard.
 
+---
+
+Before starting, you must first install the different dependencies that will be used; these are located in: `requirements.txt`
+
+---
+
 ## 1. Exploratory Data Analysis
 
 An exploratory data analysis was performed for each dataset from 2015 to 2019. The analysis included the review of dataset structure, missing values, duplicated records, inconsistent column names, data types, possible outliers, and schema differences between years.
@@ -189,6 +195,8 @@ The variables with the lowest correlation were:
 - `generosity`
 - `year`
 
+![Correlation Matrix](images/correlation_matrix.png)
+
 The correlation matrix confirmed these results. Variables with stronger relationships to `happiness_score` showed higher correlation values, while variables such as `year` and `generosity` showed weaker relationships. The matrix also allowed the identification of relationships between the predictor variables themselves.
 
 ### Graphical Analysis
@@ -279,4 +287,46 @@ Each prediction is linked to the original event using raw_event_id, which allows
 
 The following diagram represents the data warehouse schema used in the project:
 
-Para su ejecucion es importante tener en cuenta que primero se debe de ejecutar los archivos auxiliares `validation.py`, `model_utils.py`, `database.py`, `create_table.py`, `config.py` despues de eso se puede ejecutar el consumer con `python consumer.py` dentro de la carpeta kafka y por ultimo `python producer.py` en la carpeta kafka, hay que esperar hasta que el producer mande toda la informacion y el consumer simpre va a segir escuchando por si entra alguna informacion nueva.
+![Data Warehouse Diagram](images/diagram_data_warehouse.png)
+
+---
+
+## Execution Instructions
+
+To run the project, the Kafka and Zookeeper containers must first be started using Docker Compose:
+
+`docker compose up -d`
+Then, the MySQL database and its tables must be created by running the SQL script or the create_tables.py file, depending on the project configuration.
+
+The files validation.py, model_utils.py, database.py, and config.py are auxiliary files. They are not executed directly because they are imported by consumer.py to validate events, load the serialized model, connect to the database, and manage general configuration settings.
+
+After that, the consumer must be executed inside the kafka folder:
+
+`python consumer.py`
+
+Finally, in another terminal, the producer must be executed inside the kafka folder:
+
+`python producer.py`
+
+---
+
+## Dashboard Explanation
+
+The final dashboard was built in Power BI using a Windows virtual machine in UTM. The dashboard is connected directly to the MySQL data warehouse, not to CSV files.
+
+The dashboard includes the following required KPIs:
+
+1. Average prediction error
+2. Predictions by country
+3. Predicted vs actual score
+4. Prediction trends over time
+
+The average prediction error shows that the model has a relatively low prediction error, which indicates that the predictions are generally effective for the purpose of this workshop.
+
+The predictions by country visualization shows that most countries have five predictions because they appear in the happiness rankings from 2015 to 2019. However, some countries appear fewer times because they are not present in all yearly datasets.
+
+The prediction trend over time shows that the prediction error remains at relatively low levels across the years. The highest error peak appears in 2016, where the model performance was slightly less accurate compared to the other years.
+
+Finally, the predicted vs actual score visualization shows that the predicted values are generally close to the real happiness scores. This confirms that the model predictions do not present major differences compared to the actual values, although some variation is visible, especially in 2016.
+
+![Power BI Dashboard](images/dashboard.png)
