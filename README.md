@@ -287,6 +287,7 @@ Each prediction is linked to the original event using raw_event_id, which allows
 
 The following diagram represents the data warehouse schema used in the project:
 
+
 ![Data Warehouse Diagram](images/diagram_data_warehouse.png)
 
 ---
